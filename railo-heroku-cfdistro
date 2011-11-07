@@ -1,0 +1,38 @@
+#! /bin/bash
+reldir=`dirname $0`
+cd $reldir/build
+export ANT_HOME=/workspace/cfdistro/src/cfdistro/ant
+if [ -z "$1" ]; then
+echo "railo-heroku-cfdistro control script"
+OPTIONS="start stop help list-targets update exit"
+select opt in $OPTIONS; do
+if [ "$opt" = "start" ]; then
+	/workspace/cfdistro/src/cfdistro/ant/bin/ant -f build/build.xml build.start.launch
+	exit
+elif [ "$opt" = "stop" ]; then
+	/workspace/cfdistro/src/cfdistro/ant/bin/ant -f build/build.xml server.stop
+	exit
+elif [ "$opt" = "help" ]; then
+	echo "usage (skips this prompt): railo-heroku-cfdistro.sh [start|stop|{target}]"
+elif [ "$opt" = "list-targets" ]; then
+	/workspace/cfdistro/src/cfdistro/ant/bin/ant -f build/build.xml help
+elif [ "$opt" = "update" ]; then
+	/workspace/cfdistro/src/cfdistro/ant/bin/ant -f build/build.xml project.update
+elif [ "$opt" = "exit" ]; then
+	exit
+else
+	#clear
+	echo bad option
+fi
+done
+fi
+target=$1
+parameters=""
+shift
+for var in "$@"
+do
+    parameters="$parameters -D$var"
+done
+/bin/sh /workspace/cfdistro/src/cfdistro/ant/bin/ant -f build.xml $target -Dbasedir=. $parameters
+	
+			
