@@ -47,3 +47,14 @@ Tweaked the pom to use my src and pub dirs:
 	</configuration>
 </plugin>
 
+Ran the heroku build:
+
+./railo-heroku-cfdistro build build.type=heroku
+
+Moved css + images from ./heroku to pub, created a test index.cfm in pub, creating component in src/herokucore for testing pom tweak.
+
+Added/committed ./heroku/ (base WEB-INF for heroku app)
+
+Pushed to heroku:
+
+git push heroku master
