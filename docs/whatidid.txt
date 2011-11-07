@@ -1,0 +1,49 @@
+Installed heroku.
+I created a heroku account and added an SSH key:
+heroku login
+
+I created a new cfdistro skeleton with:
+
+cfdistro cfdistro.skeleton target.dir=/blah/railo-heroku-cfdistro distro.name=railo-heroku-cfdistro
+
+Then I added the heroku build properties
+
+#build/build.heroku.properties
+war.target.dir=${basedir}/../heroku
+server.sharedlibs=true
+
+Then I renamed mappings.xml to mappings.local.xml and added the src dir as root
+
+<mappings>
+  <mapping physical="@src.dir@/" virtual="/"/>
+</mappings>
+
+Added the pom.xml and Procfile.
+
+Created the heroku app on heroku:
+heroku create --stack cedar
+
+Wrote down the url heroku gave me.
+
+Tweaked the pom to use my src and pub dirs:
+
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-war-plugin</artifactId>
+	<version>2.1.1</version>
+	<configuration>
+		<warSourceDirectory>heroku</warSourceDirectory>
+		<!-- <webXml>heroku/WEB-INF/web.xml</webXml>  -->
+		<webResources>
+			<resource>
+				<!-- this is relative to the pom.xml directory -->
+				<directory>pub</directory>
+			</resource>
+			<resource>
+				<!-- this is relative to the pom.xml directory -->
+				<directory>src</directory>
+			</resource>
+		</webResources>
+	</configuration>
+</plugin>
+
